@@ -13,9 +13,24 @@
 <meta name="apple-mobile-web-app-title" content="Conscious Tracker">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/mobile.css">
+<link rel="stylesheet" href="css/base.css?v=20260909">
+<link rel="stylesheet" href="css/components.css?v=20260909">
+<link rel="stylesheet" href="css/mobile.css?v=20260909">
+<style>
+  html,body{margin:0;min-height:100%;background:#0f0f1a;color:#fff}
+  #app{display:flex;min-height:100vh;min-height:100dvh}
+  #sidebar{display:flex;flex:0 0 16rem;flex-direction:column;min-height:100vh;background:#1a1a2e}
+  main{display:flex;flex:1;min-width:0;flex-direction:column;overflow:hidden}
+  #content{flex:1;overflow:auto;padding:1rem}
+  #mobile-nav{display:none}
+  #pwa-install[hidden],#pwa-update[hidden]{display:none!important}
+  @media(max-width:767px){
+    #sidebar{position:fixed;left:-100%;top:0;bottom:0;width:min(86vw,320px);z-index:40}
+    #sidebar.open{left:0}
+    #mobile-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;align-items:center;justify-content:space-around;padding:6px 4px;background:#11182b;border-top:1px solid rgba(255,255,255,.12)}
+    #content{padding-bottom:6.5rem}
+  }
+</style>
 </head>
 <body class="bg-[#0f0f1a] text-white min-h-screen">
 
@@ -101,8 +116,8 @@
 <dialog id="edit-recommended-modal" class="modal"><div class="modal-box bg-[#1a1a2e] border border-white/10"><h3 class="font-bold text-lg mb-4">Edit Recommended Activity</h3><form id="edit-recommended-form" class="space-y-4"><input type="hidden" id="edit-rec-id"><div class="form-control"><label class="label"><span class="label-text">Activity Name</span></label><input type="text" id="edit-rec-title" class="input input-bordered bg-[#0f0f1a]" required></div><div class="grid grid-cols-2 gap-4"><div class="form-control"><label class="label"><span class="label-text">Core Pillar</span></label><select id="edit-rec-pillar" class="select select-bordered bg-[#0f0f1a]"><option value="mentally">Mentally</option><option value="psychology">Psychology</option><option value="physically">Physically</option><option value="spiritually">Spiritually</option></select></div><div class="form-control"><label class="label"><span class="label-text">Points</span></label><input type="number" id="edit-rec-points" min="1" max="10" class="input input-bordered bg-[#0f0f1a]"></div></div><div class="modal-action"><button type="button" onclick="document.getElementById('edit-recommended-modal').close()" class="btn btn-ghost">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div></form></div><form method="dialog" class="modal-backdrop"><button>close</button></form></dialog>
 
 <!-- PWA Install/Update -->
-<div id="pwa-install" role="button" tabindex="0" aria-label="Install Conscious Tracker">Install App</div>
-<div id="pwa-update" role="status"><span>A new version is ready.</span><button id="pwa-update-btn">Update</button></div>
+<div id="pwa-install" role="button" tabindex="0" aria-label="Install Conscious Tracker" hidden>Install App</div>
+<div id="pwa-update" role="status" hidden><span>A new version is ready.</span><button id="pwa-update-btn">Update</button></div>
 
 <!-- Scripts (order matters: utils -> api -> components -> views -> app) -->
 <script src="js/api.js"></script>
@@ -129,11 +144,11 @@
 (function(){
   const installBtn=document.getElementById('pwa-install');
   let deferredPrompt=null;
-  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.classList.add('show')});
-  async function install(){if(!deferredPrompt)return;deferredPrompt.prompt();try{await deferredPrompt.userChoice}catch(_){}deferredPrompt=null;installBtn.classList.remove('show')}
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false;installBtn.classList.add('show')});
+  async function install(){if(!deferredPrompt)return;deferredPrompt.prompt();try{await deferredPrompt.userChoice}catch(_){}deferredPrompt=null;installBtn.hidden=true;installBtn.classList.remove('show')}
   installBtn.addEventListener('click',install);
   installBtn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')install()});
-  window.addEventListener('appinstalled',()=>installBtn.classList.remove('show'));
+  window.addEventListener('appinstalled',()=>{installBtn.hidden=true;installBtn.classList.remove('show')});
 
   if('serviceWorker' in navigator){
     window.addEventListener('load',async()=>{
@@ -144,7 +159,7 @@
         navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;window.location.reload()});
         reg.addEventListener('updatefound',()=>{
           const worker=reg.installing;if(!worker)return;
-          worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller){document.getElementById('pwa-update').classList.add('show')}});
+          worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller){const update=document.getElementById('pwa-update');update.hidden=false;update.classList.add('show')}});
         });
         document.getElementById('pwa-update-btn').addEventListener('click',()=>{if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'})});
       }catch(err){console.warn('Offline service worker unavailable:',err)}

@@ -1,13 +1,12 @@
-const CACHE_NAME = 'conscious-tracker-v3-20260907-02';
+const CACHE_NAME = 'conscious-tracker-v3-20260909-01';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
-  './icons/icon-512.png',
-  './css/base.css',
-  './css/components.css',
-  './css/mobile.css',
+  './css/base.css?v=20260909',
+  './css/components.css?v=20260909',
+  './css/mobile.css?v=20260909',
   './js/api.js',
   './js/utils.js',
   './js/stats.js',
