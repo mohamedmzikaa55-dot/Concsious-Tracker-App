@@ -4,7 +4,7 @@
   "description": "Record daily habits and tasks, then score points for each day.",
   "start_url": "/Concsious-Tracker-App/",
   "scope": "./",
-  "id": "/Concsious-Tracker-App/",
+  "id": "navigator.serviceWorker.register('/Concsious-Tracker-App/sw.js')/",
   "display": "standalone",
   "background_color": "#0E1116",
   "theme_color": "#0E1116",
