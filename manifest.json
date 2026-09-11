@@ -2,7 +2,7 @@
   "name": "Daily Report",
   "short_name": "Daily Report",
   "description": "Record daily habits and tasks, then score points for each day.",
-  "start_url": "./",
+  "start_url": "/Concsious-Tracker-App/",
   "scope": "./",
   "id": "./",
   "display": "standalone",
