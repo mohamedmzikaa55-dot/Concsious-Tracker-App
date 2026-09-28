@@ -2,7 +2,7 @@
 // VERSION is replaced at build time (vite.config.js) with a unique build id,
 // e.g. 'daily-report-2026-09-28T...'. A new byte-different sw.js makes the
 // browser install the new worker automatically — no reinstall needed.
-const VERSION = 'daily-report-2026-09-28T18-28-59-mulkzy27'
+const VERSION = 'daily-report-2026-09-28T18-58-48-mulm2asp'
 const CACHE = VERSION.indexOf('__APP_') === 0 ? 'daily-report-v1' : VERSION
 const CORE = [
   './',
